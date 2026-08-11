@@ -2,6 +2,8 @@
 
 Aplicação fullstack de delivery para uma distribuidora de bebidas: catálogo de produtos, carrinho, checkout e acompanhamento de pedidos, com três perfis de acesso — cliente, pessoa vendedora e administração.
 
+🔗 **[Ver aplicação](https://delivery-fullstack.vercel.app)** · [API](https://delivery-fullstack-api.vercel.app/products)
+
 > Projeto desenvolvido em equipe de 12 pessoas. Atuei principalmente no back-end (camadas de vendas e usuários, autenticação JWT e testes de integração) e na integração com o front-end, com 53 commits — o segundo maior volume de contribuições do time.
 
 ## Funcionalidades
@@ -146,3 +148,17 @@ Os testes do back-end usam mocks do Sequelize e **não precisam do banco no ar**
 ## Modelo de dados
 
 ![Diagrama ER](./assets/readme/eer.png)
+
+## Deploy
+
+Front-end e API rodam na Vercel (a API como função serverless), com MySQL
+gerenciado no Aiven. O deploy é automático a cada push na `main`.
+
+| Serviço | Onde |
+|---|---|
+| Front-end | Vercel — `delivery-fullstack` |
+| API | Vercel (serverless) — `delivery-fullstack-api`, root `back-end/` |
+| Banco | Aiven MySQL 8.4, TLS obrigatório |
+
+Variáveis necessárias em produção: `DATABASE_URL`, `MYSQL_SSL_CA`,
+`JWT_SECRET` e `API_BASE_URL` na API; `REACT_APP_API_URL` no front-end.
