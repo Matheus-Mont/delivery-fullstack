@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/Header';
+import PageShell from '../../components/UI/PageShell';
 import FormCheckout from '../../components/FormCheckout';
 import { getSellers, postNewSales } from '../../services/api';
 import TableCheckout from '../../components/TableCheckout';
@@ -106,28 +106,40 @@ function Checkout() {
   ];
 
   return (
-    <div className="flex flex-col bg-slate-200">
-      <Header buttons={ buttons } userName={ userName } />
-      <div
-        className="flex flex-col max-w-2xl mx-auto py-16 px-4 sm:px-6
-          lg:max-w-7xl lg:px-8"
-      >
-        <div className="flex mb-12 justify-start bg-slate-200 md:mx-4">
-          <h2
-            className="text-2xl md:text-3xl font-medium tracking-tight text-gray-700"
+    <PageShell
+      buttons={ buttons }
+      userName={ userName }
+      title="Finalizar pedido"
+      subtitle="Revise os itens e informe onde entregar."
+    >
+      <div className="flex flex-col gap-6">
+        <TableCheckout
+          orders={ finalSaleProducts }
+          removeProduct={ removeProduct }
+        />
+
+        <div className="flex justify-end">
+          <div
+            className="flex w-full items-baseline justify-between gap-6
+              rounded-xl border border-stone-200 bg-white px-5 py-4 shadow-card
+              sm:w-auto"
           >
-            Finalizar pedido
-          </h2>
+            <span
+              className="text-xs font-medium uppercase tracking-wider
+                text-stone-500"
+            >
+              Total
+            </span>
+            <span
+              className="font-display text-2xl font-semibold tabular-nums
+                text-stone-900"
+              data-testid="customer_checkout__element-order-total-price"
+            >
+              {`R$ ${convertPrice(totalPrice)}`}
+            </span>
+          </div>
         </div>
-        <div>
-          <TableCheckout
-            orders={ finalSaleProducts }
-            removeProduct={ removeProduct }
-          />
-          <h3 data-testid="customer_checkout__element-order-total-price">
-            { convertPrice(totalPrice) }
-          </h3>
-        </div>
+
         <FormCheckout
           seller={ seller }
           setSeller={ setSeller }
@@ -138,21 +150,20 @@ function Checkout() {
           sellers={ sellers }
           handleSubmitBtn={ handleSubmitBtn }
         />
-        {errorMessage
-          && (
-            <div
-              className="w-1/2 text-center border-2 rounded-md border-amber-800 py-2"
+
+        {errorMessage && (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+            <p
+              data-testid="common_register__element-invalid_register"
+              className="text-center text-sm font-medium text-red-700"
             >
-              <p
-                data-testid="common_register__element-invalid_register"
-                className="text-amber-800 text-sm font-medium"
-              >
-                Pedido não realizado, tente novamente!
-              </p>
-            </div>)}
+              Não foi possível registrar o pedido. Tente novamente.
+            </p>
+          </div>
+        )}
       </div>
       <ToastContainer />
-    </div>
+    </PageShell>
   );
 }
 

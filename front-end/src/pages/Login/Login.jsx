@@ -92,35 +92,39 @@ function Login() {
 
   return (
     <div
-      className="h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      className="flex min-h-screen items-center justify-center bg-stone-100
+        px-4 py-12"
     >
-      <div className="max-w-md w-full space-y-8">
-        <div>
+      <div className="w-full max-w-md">
+        <div className="mb-8 text-center">
           <img
-            className="mx-auto h-32 w-auto"
+            className="mx-auto h-20 w-auto"
             src={ logo }
-            alt="Workflow"
+            alt=""
           />
-          <h2
-            className="mt-6 text-center text-3xl font-extrabold text-gray-900"
+          <h1
+            className="mt-5 font-display text-3xl font-semibold tracking-tight
+              text-stone-900"
           >
             Delivery App
-          </h2>
+          </h1>
+          <p className="mt-2 text-sm text-stone-500">
+            Bebida gelada na porta de casa.
+          </p>
         </div>
-        <div className="mt-8 space-y-6">
-          <input type="hidden" name="remember" defaultValue="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
+
+        <div
+          className="rounded-2xl border border-stone-200 bg-white p-6
+            shadow-raised sm:p-8"
+        >
+          <div className="space-y-4">
             <GenericInput
               id="common_login__input-email"
               name="email"
               type="email"
               value={ email }
-              label="Email address"
-              infoClass="appearance-none rounded-none relative block w-full px-3 py-2
-                border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
-                focus:z-10 sm:text-sm"
-              placeholder="Email"
+              label="E-mail"
+              placeholder="voce@email.com"
               onChange={ handleChangeEmail }
             />
             <GenericInput
@@ -128,55 +132,42 @@ function Login() {
               name="password"
               type="password"
               value={ password }
-              label="Password"
-              infoClass="appearance-none rounded-none relative block w-full px-3 py-2
-                border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md
-                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
-                focus:z-10 sm:text-sm"
-              placeholder="Senha"
+              label="Senha"
+              placeholder="Sua senha"
               onChange={ handleChangePassword }
             />
           </div>
-          <div>
+
+          <div className="mt-6 space-y-3">
             <GenericButton
-              name="Login"
+              name="Entrar"
               id="common_login__button-login"
-              infoClassBtn="group relative w-full my-2 flex justify-center py-2 px-4
-              border border-transparent text-sm font-medium rounded-md text-white
-              bg-indigo-600 disabled:bg-indigo-400 hover:bg-indigo-700 focus:outline-none
-              focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              infoClassSpan="absolute left-0 inset-y-0 flex items-center pl-3"
-              infoClassIcon="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+              size="lg"
               disabled={ btnIsDisabled }
               onClick={ handleLoginClick }
             />
             <GenericButton
               name="Criar conta"
               id="common_login__button-register"
-              infoClassBtn="group relative w-full flex justify-center py-2 px-4 border
-              border-transparent text-sm font-medium rounded-md text-white bg-indigo-600
-              hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2
-              focus:ring-indigo-500"
-              infoClassSpan=""
-              infoClassIcon=""
+              variant="secondary"
+              size="lg"
               disabled={ false }
               onClick={ handleRegisterClick }
             />
           </div>
-          <div className="flex justify-center items-center">
-            {errorMessage
-            && (
-              <div
-                className="w-1/2 text-center border-2 rounded-md border-amber-800 py-2"
+
+          {errorMessage && (
+            <div
+              className="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3"
+            >
+              <p
+                data-testid="common_login__element-invalid-email"
+                className="text-center text-sm font-medium text-red-700"
               >
-                <p
-                  data-testid="common_login__element-invalid-email"
-                  className="text-amber-800 text-sm font-medium"
-                >
-                  Login ou Senha inválidos
-                </p>
-              </div>)}
-          </div>
+                E-mail ou senha incorretos. Confira e tente de novo.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

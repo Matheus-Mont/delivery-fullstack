@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GenericInput from './GenericInput';
+import GenericInput, { fieldClass } from './GenericInput';
 import GenericButton from './GenericButton';
 import GenericSelect from './GenericSelect';
 
@@ -27,70 +27,73 @@ function FormCheckout({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <section
+      className="rounded-xl border border-stone-200 bg-white p-5 shadow-card
+        sm:p-6"
+    >
       <h2
-        className="text-2xl md:text-3xl font-medium tracking-tight text-gray-700"
+        className="font-display text-lg font-semibold tracking-tight
+          text-stone-900"
       >
-        Detalhes e Endereço para Entrega
+        Endereço para entrega
       </h2>
-      <div className="flex justify-between items-center">
-        <div className="flex flex-col justify-center items-center">
-          <p>Vendedor Responsável</p>
+      <p className="mt-1 text-sm text-stone-500">
+        Escolha quem vai atender e informe onde deixar o pedido.
+      </p>
+
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-6">
+        <div className="sm:col-span-2">
           <GenericSelect
             id="customer_checkout__select-seller"
             name="seller"
-            label="Seller"
+            label="Pessoa vendedora"
             value={ seller }
-            infoClass="appearance-none rounded-none relative block w-full px-3 py-2
-              border border-gray-300 placeholder-gray-500 text-gray-900
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
-              focus:z-10 sm:text-sm"
             onChange={ handleChangeSeller }
             optionsList={ sellers }
           />
         </div>
-        <div className="flex flex-col justify-center items-center">
-          <p>Endereço</p>
+        <div className="sm:col-span-3">
           <GenericInput
             id="customer_checkout__input-address"
             name="address"
             type="text"
-            label="Address"
+            label="Endereço"
             value={ address }
-            infoClass="appearance-none rounded-none relative block w-full px-3 py-2
-              border border-gray-300 placeholder-gray-500 text-gray-900
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
-              focus:z-10 sm:text-sm"
-            placeholder="Endereço"
+            placeholder="Rua, avenida, bairro"
             onChange={ handleChangeAddress }
           />
         </div>
-        <div className="flex flex-col justify-center items-center">
-          <p>Número</p>
+        <div className="sm:col-span-1">
+          <label
+            htmlFor="customer_checkout__input-addressNumber"
+            className="mb-1.5 block text-sm font-medium text-stone-700"
+          >
+            Número
+          </label>
           <input
+            id="customer_checkout__input-addressNumber"
             type="number"
             value={ houseNum }
             onChange={ handleChangeHouseNum }
             min="0"
-            className="appearance-none rounded-none relative block w-full px-3 py-2
-              border border-gray-300 placeholder-gray-500 text-gray-900
-              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
-              focus:z-10 sm:text-sm"
+            placeholder="000"
+            className={ fieldClass }
             data-testid="customer_checkout__input-addressNumber"
           />
         </div>
       </div>
-      <GenericButton
-        name="Finalizar Pedido"
-        id="customer_checkout__button-submit-order"
-        infoClassBtn="group relative w-full my-2 h-12 flex justify-center py-3 px-4
-        border border-transparent text-sm font-medium rounded-md text-white
-        bg-indigo-600 disabled:bg-indigo-400 hover:bg-indigo-700 focus:outline-none
-        focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        onClick={ handleSubmitBtn }
-        disabled={ false }
-      />
-    </div>
+
+      <div className="mt-6 flex justify-end">
+        <GenericButton
+          name="Finalizar pedido"
+          id="customer_checkout__button-submit-order"
+          size="lg"
+          fullWidth={ false }
+          onClick={ handleSubmitBtn }
+          disabled={ false }
+        />
+      </div>
+    </section>
   );
 }
 

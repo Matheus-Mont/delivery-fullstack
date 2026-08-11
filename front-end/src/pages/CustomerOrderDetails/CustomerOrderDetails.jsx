@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Header from '../../components/Header';
+import PageShell from '../../components/UI/PageShell';
 import TableDetails from '../../components/TableDetails';
 import {
   getOrderDetails,
@@ -28,6 +28,7 @@ function CustomerOrderDetails() {
     const priceWithComma = priceWithDot.toString().replace('.', ',');
     return priceWithComma;
   };
+
   const getOrderInfo = async () => {
     if (!user) {
       localStorage.clear();
@@ -36,7 +37,6 @@ function CustomerOrderDetails() {
     const orderInfo = await getOrderDetails(user.token, searchParams.id);
     if (orderInfo.statusText) {
       navigate('/notfound');
-      // console.log(orderInfo);
     }
     setOrder(orderInfo);
     setOrderStatus(orderInfo.status);
@@ -78,16 +78,16 @@ function CustomerOrderDetails() {
     getOrderInfo();
   }, []);
 
+  const isSeller = user.role === 'seller';
+
   return (
-    <div>
-      <Header
-        buttons={ user.role === 'seller'
-          ? [sellerOrdersButton]
-          : [productsButton, ordersButton] }
-        userName={ user.name }
-      />
-      <h1>CustomerOrderDetails</h1>
-      <div className="flex flex-col">
+    <PageShell
+      buttons={ isSeller ? [sellerOrdersButton] : [productsButton, ordersButton] }
+      userName={ user.name }
+      title="Detalhe do pedido"
+      subtitle="Acompanhe os itens e o andamento da entrega."
+    >
+      <div className="flex flex-col gap-6">
         <DetailOrderHeader
           order={ order }
           handleDeliveredBtn={ handleDeliveredBtn }
@@ -96,15 +96,32 @@ function CustomerOrderDetails() {
           handleToDeliverBtn={ handleToDeliverBtn }
           orderStatus={ orderStatus }
         />
-        <div>
-          <TableDetails orders={ order.Products } role={ user.role } />
-        </div>
-        <div data-testid={ `${user.role}_order_details__element-order-total-price` }>
-          Total:
-          { convertPrice(order.totalPrice) }
+
+        <TableDetails orders={ order.Products } role={ user.role } />
+
+        <div className="flex justify-end">
+          <div
+            className="flex w-full items-baseline justify-between gap-6
+              rounded-xl border border-stone-200 bg-white px-5 py-4 shadow-card
+              sm:w-auto"
+          >
+            <span
+              className="text-xs font-medium uppercase tracking-wider
+                text-stone-500"
+            >
+              Total do pedido
+            </span>
+            <span
+              className="font-display text-2xl font-semibold tabular-nums
+                text-stone-900"
+              data-testid={ `${user.role}_order_details__element-order-total-price` }
+            >
+              {`R$ ${convertPrice(order.totalPrice)}`}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }
 

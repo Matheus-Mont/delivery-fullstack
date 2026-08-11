@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../components/Header';
+import PageShell from '../../components/UI/PageShell';
 import OrdersCard from '../../components/OrdersCard';
+import { EmptyState } from '../../components/UI/Table';
 import { getSellerOrders } from '../../services/api';
 
 function SellerOrders() {
@@ -25,15 +26,24 @@ function SellerOrders() {
     getAllOrders();
   }, []);
 
+  const hasOrders = !orders.status && orders.length > 0;
+
   return (
-    <div>
-      <Header buttons={ [ordersButton] } userName={ user.name } />
-      {
-        !orders.status
-          ? <OrdersCard orders={ orders } role={ SELLER } />
-          : <p>Nenhum produto encontrado</p>
-      }
-    </div>
+    <PageShell
+      buttons={ [ordersButton] }
+      userName={ user.name }
+      title="Pedidos recebidos"
+      subtitle="Aprove, prepare e despache os pedidos da sua carteira."
+    >
+      {hasOrders ? (
+        <OrdersCard orders={ orders } role={ SELLER } />
+      ) : (
+        <EmptyState
+          title="Nenhum pedido por enquanto"
+          description="Assim que um cliente finalizar a compra, ele aparece aqui."
+        />
+      )}
+    </PageShell>
   );
 }
 

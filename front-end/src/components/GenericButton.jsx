@@ -1,37 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { LockClosedIcon } from '@heroicons/react/solid';
+import Button from './UI/Button';
 
-function GenericButton(props) {
-  const { name, id, infoClassBtn, onClick, disabled } = props;
+function GenericButton({ name, id, onClick, disabled, variant, size, fullWidth }) {
   return (
-    <button
+    <Button
       type="submit"
-      className={ infoClassBtn }
       id={ id }
       data-testid={ id }
       onClick={ onClick }
       disabled={ disabled }
+      variant={ variant }
+      size={ size }
+      fullWidth={ fullWidth }
     >
-      {/* <span className={ infoClassSpan }>
-        <LockClosedIcon
-          className={ infoClassIcon }
-          aria-hidden="true"
-        />
-      </span> */}
       {name}
-    </button>
+    </Button>
   );
 }
 
 GenericButton.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  infoClassBtn: PropTypes.string.isRequired,
-  // infoClassSpan: PropTypes.string.isRequired,
-  // infoClassIcon: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'ghost', 'danger']),
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
+  fullWidth: PropTypes.bool,
+};
+
+GenericButton.defaultProps = {
+  variant: 'primary',
+  size: 'md',
+  fullWidth: true,
 };
 
 export default GenericButton;

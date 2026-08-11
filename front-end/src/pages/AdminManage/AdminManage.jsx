@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import TableAdminManageUsers from '../../components/TableAdminManageUsers';
-import Header from '../../components/Header';
+import PageShell from '../../components/UI/PageShell';
+import { EmptyState } from '../../components/UI/Table';
 import { deleteUser, getUsers, postUserAdmin } from '../../services/api';
 import FormAdminRegisterUsers from '../../components/FormAdminRegisterUsers';
 import 'react-toastify/dist/ReactToastify.css';
@@ -72,9 +73,13 @@ function AdminManage() {
   }, [removedUser]);
 
   return (
-    <div>
-      <Header buttons={ [manageUserButton] } userName={ user.name } />
-      <div>
+    <PageShell
+      buttons={ [manageUserButton] }
+      userName={ user.name }
+      title="Gerenciar pessoas usuárias"
+      subtitle="Cadastre novas contas e administre quem tem acesso."
+    >
+      <div className="flex flex-col gap-6">
         <FormAdminRegisterUsers
           name={ name }
           setName={ setName }
@@ -88,27 +93,38 @@ function AdminManage() {
           btnIsDisabled={ btnIsDisabled }
           setBtnIsDisabled={ setBtnIsDisabled }
         />
-      </div>
-      {errorMessage
-          && (
-            <div
-              className="w-1/2 text-center border-2 rounded-md border-amber-800 py-2"
+
+        {errorMessage && (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+            <p
+              data-testid="admin_manage__element-invalid-register"
+              className="text-center text-sm font-medium text-red-700"
             >
-              <p
-                data-testid="admin_manage__element-invalid-register"
-                className="text-amber-800 text-sm font-medium"
-              >
-                Cadastro não registrado, tente novamente!
-              </p>
-            </div>)}
-      <div>
-        <h1>Lista de usuários</h1>
-        {!users.status
-          ? <TableAdminManageUsers users={ users } removeUser={ removeUser } />
-          : <p>Nenhum usuário encontrado</p>}
+              Cadastro não registrado. Confira os dados e tente novamente.
+            </p>
+          </div>
+        )}
+
+        <section>
+          <h2
+            className="mb-3 font-display text-lg font-semibold tracking-tight
+              text-stone-900"
+          >
+            Pessoas cadastradas
+          </h2>
+          {!users.status && users.length > 0 ? (
+            <TableAdminManageUsers users={ users } removeUser={ removeUser } />
+          ) : (
+            <EmptyState
+              title="Nenhuma pessoa cadastrada"
+              description="Use o formulário acima para criar a primeira conta."
+            />
+          )}
+        </section>
+
         <ToastContainer />
       </div>
-    </div>
+    </PageShell>
   );
 }
 

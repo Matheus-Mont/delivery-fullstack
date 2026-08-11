@@ -1,5 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from './UI/Button';
+import StatusBadge from './UI/StatusBadge';
+import OrderStatusTrack from './UI/OrderStatusTrack';
+
+function Meta({ label, children, testId }) {
+  return (
+    <div>
+      <dt className="text-xs font-medium uppercase tracking-wider text-stone-500">
+        {label}
+      </dt>
+      <dd className="mt-1 text-sm text-stone-900" data-testid={ testId }>
+        {children}
+      </dd>
+    </div>
+  );
+}
+
+Meta.propTypes = {
+  label: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  testId: PropTypes.string.isRequired,
+};
 
 function DetailOrderHeader({
   order,
@@ -16,84 +38,92 @@ function DetailOrderHeader({
   };
 
   return (
-    <div className="flex justify-between">
-      <h2
-        data-testid={
-          `${userRole}_order_details__element-order-details-label-order-id`
-        }
+    <section
+      className="rounded-xl border border-stone-200 bg-white p-5 shadow-card
+        sm:p-6"
+    >
+      <div
+        className="flex flex-col gap-4 border-b border-stone-100 pb-5
+          sm:flex-row sm:items-start sm:justify-between"
       >
-        Pedido N:
-        {' '}
-        <span>
-          { order.id }
-        </span>
-      </h2>
-      { userRole === 'customer' && (
-        <h3
-          data-testid="customer_order_details__element-order-details-label-seller-name"
-        >
-          {order.Seller.name}
-        </h3>)}
-      <p
-        data-testid={
-          `${userRole}_order_details__element-order-details-label-order-date`
-        }
-      >
-        {handleDate(order.saleDate)}
-      </p>
-      <p
-        data-testid={
-          `${userRole}_order_details__element-order-details-label-delivery-status`
-        }
-      >
-        {orderStatus}
-      </p>
-      { userRole === 'customer'
-        ? (
-          <button
-            type="button"
-            onClick={ handleDeliveredBtn }
-            data-testid="customer_order_details__button-delivery-check"
-            className="group relative w-full my-2 flex justify-center py-2 px-4
-              border border-transparent text-sm font-medium rounded-md text-white
-              bg-indigo-600 disabled:bg-indigo-400 hover:bg-indigo-700 focus:outline-none
-              focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            name="Delivery Button"
-            disabled={ orderStatus !== 'Em Trânsito' }
+        <div className="flex items-center gap-3">
+          <h2
+            className="font-display text-xl font-semibold tracking-tight
+              text-stone-900"
+            data-testid={
+              `${userRole}_order_details__element-order-details-label-order-id`
+            }
           >
-            Marcar como entregue
-          </button>)
-        : (
-          <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={ handlePrepareBtn }
-              data-testid="seller_order_details__button-preparing-check"
-              className="group relative w-full my-2 flex justify-center py-2 px-4
-                border border-transparent text-sm font-medium rounded-md text-white
-                bg-indigo-600 disabled:bg-indigo-400 hover:bg-indigo-700
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              name="Prepare Button"
-              disabled={ orderStatus !== 'Pendente' }
+            {'Pedido '}
+            <span className="tabular-nums">
+              {order.id ? `#${order.id}` : ''}
+            </span>
+          </h2>
+          <StatusBadge
+            status={ orderStatus }
+            data-testid={
+              `${userRole}_order_details__element-order-details-label-delivery-status`
+            }
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          {userRole === 'customer' ? (
+            <Button
+              onClick={ handleDeliveredBtn }
+              data-testid="customer_order_details__button-delivery-check"
+              name="Delivery Button"
+              disabled={ orderStatus !== 'Em Trânsito' }
             >
-              Preparar Pedido
-            </button>
-            <button
-              type="button"
-              onClick={ handleToDeliverBtn }
-              data-testid="seller_order_details__button-dispatch-check"
-              className="group relative w-full my-2 flex justify-center py-2 px-4
-                border border-transparent text-sm font-medium rounded-md text-white
-                bg-indigo-600 disabled:bg-indigo-400 hover:bg-indigo-700
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              name="To Deliver Button"
-              disabled={ orderStatus !== 'Preparando' }
-            >
-              Saiu para entrega
-            </button>
-          </div>
+              Marcar como entregue
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="secondary"
+                onClick={ handlePrepareBtn }
+                data-testid="seller_order_details__button-preparing-check"
+                name="Prepare Button"
+                disabled={ orderStatus !== 'Pendente' }
+              >
+                Preparar pedido
+              </Button>
+              <Button
+                onClick={ handleToDeliverBtn }
+                data-testid="seller_order_details__button-dispatch-check"
+                name="To Deliver Button"
+                disabled={ orderStatus !== 'Preparando' }
+              >
+                Saiu para entrega
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+
+      <dl className="grid grid-cols-2 gap-4 py-5 sm:grid-cols-3">
+        {userRole === 'customer' && (
+          <Meta
+            label="Pessoa vendedora"
+            testId="customer_order_details__element-order-details-label-seller-name"
+          >
+            {order.Seller.name}
+          </Meta>
         )}
-    </div>
+        <Meta
+          label="Data do pedido"
+          testId={
+            `${userRole}_order_details__element-order-details-label-order-date`
+          }
+        >
+          {order.saleDate ? handleDate(order.saleDate) : '—'}
+        </Meta>
+      </dl>
+
+      <div className="border-t border-stone-100 pt-5">
+        <OrderStatusTrack status={ orderStatus } />
+      </div>
+    </section>
   );
 }
 
@@ -104,7 +134,7 @@ DetailOrderHeader.propTypes = {
   userRole: PropTypes.string.isRequired,
   orderStatus: PropTypes.string.isRequired,
   order: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     Seller: PropTypes.shape({
       name: PropTypes.string,
     }),

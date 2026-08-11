@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/Header';
+import PageShell from '../../components/UI/PageShell';
+import Button from '../../components/UI/Button';
 import { getProducts } from '../../services/api';
 import Product from '../../components/Product';
 
@@ -89,48 +90,37 @@ function Products() {
   }, []);
 
   return (
-    <div className="flex flex-col bg-slate-200">
-      <Header buttons={ buttons } userName={ userName } />
-      <div
-        className="max-w-2xl mx-auto py-16 px-4 sm:px-6
-          lg:max-w-7xl lg:px-8"
-      >
-        <div className="flex mb-12 justify-between bg-slate-200 md:mx-4">
-          <h2
-            className="text-2xl md:text-3xl font-medium tracking-tight text-gray-700"
-          >
-            Produtos
-          </h2>
-          <button
-            type="button"
-            onClick={ sendToCheckout }
-            data-testid="customer_products__button-cart"
-            disabled={ totalPrice === '0.00' }
-            className="py-2 px-4 border border-transparent text-sm font-medium
-              rounded-md text-white bg-indigo-600 disabled:bg-indigo-400
-              hover:bg-indigo-700"
-          >
-            Ver carrinho:
-            {' '}
-            R$
-            {' '}
-            <span
-              data-testid="customer_products__checkout-bottom-value"
-            >
-              {convertPrice(totalPrice)}
-            </span>
-          </button>
-        </div>
-        <div
-          className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6
-          sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"
+    <PageShell
+      buttons={ buttons }
+      userName={ userName }
+      title="Produtos"
+      subtitle="Escolha as bebidas e ajuste as quantidades."
+      actions={ (
+        <Button
+          size="lg"
+          onClick={ sendToCheckout }
+          data-testid="customer_products__button-cart"
+          disabled={ totalPrice === '0.00' }
         >
-          {!isLoading && products
-            .map((e) => (
-              <Product key={ e.id } product={ e } addToCart={ addToCart } />))}
-        </div>
+          {'Ver carrinho · R$ '}
+          <span
+            className="tabular-nums"
+            data-testid="customer_products__checkout-bottom-value"
+          >
+            {convertPrice(totalPrice)}
+          </span>
+        </Button>
+      ) }
+    >
+      <div
+        className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2
+          lg:grid-cols-3 xl:grid-cols-4"
+      >
+        {!isLoading && products.map((e) => (
+          <Product key={ e.id } product={ e } addToCart={ addToCart } />
+        ))}
       </div>
-    </div>
+    </PageShell>
   );
 }
 
