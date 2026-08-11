@@ -1,0 +1,28 @@
+{
+  "name": "delivery-fullstack",
+  "version": "1.0.0",
+  "description": "Aplicação de delivery para uma distribuidora de bebidas: catálogo, carrinho, checkout e acompanhamento de pedidos para cliente, pessoa vendedora e administração.",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "pm2": "./node_modules/.bin/pm2",
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f db",
+    "dev": "./scripts/prepare-for-dev.sh",
+    "dev:prestart": "./scripts/prestart-dev.sh",
+    "stop": "(pm2 stop all && pm2 delete all) | grep 'PM2'",
+    "db:reset": "./scripts/reset-db-dev.sh",
+    "db:reset:debug": "./scripts/reset-db-dev-debug.sh",
+    "test:back": "npm test --prefix back-end",
+    "test:front": "npm test --prefix front-end",
+    "lint": "npm run lint --prefix back-end && npm run lint --prefix front-end"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "pm2": "5.2.0"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: delivery-app-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME:-delivery-app}-dev
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - delivery_db_data:/var/lib/mysql
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - 127.0.0.1
+        - -uroot
+        - -p${MYSQL_PASSWORD:-password}
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  delivery_db_data:
